@@ -1,14 +1,10 @@
 # Sprint 1
 # Computational Thinking Using Python
 
-
 ## Descrição do Projeto
-
 
 ## AVISO
 É necessário o uso de [Python 3.10+](https://www.python.org/downloads/)
-
-
 
 ## Imports
 Estamos utilzando a biblioteca [random](https://docs.python.org/pt-br/3/library/random.html) para simular a avliação de desempenho dos corredores.
