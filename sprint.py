@@ -1,31 +1,14 @@
 import random
 
-
 def generate_racers_data() -> dict:
     # Lista de nomes dos corredores
     racers_names = [
-        "Jake Dennis",
-        "Stoffel Vandoorne",
-        "Sergio Camara",
-        "Robin Frijns",
-        "Jake Hughes",
-        "Maximilian Gunther",
-        "Sam Bird",
-        "Mitch Evans",
-        "Lucas di Grassi",
-        "Antonio Felix da Costa",
-        "Sébastien Buemi",
-        "Norman Nato",
-        "Jehan Daruvala",
-        "Nyck de Vries",
-        "Oliver Rowland",
-        "Sacha Fenestraz",
-        "Jean-Eric Vergne",
-        "Dan Ticktum",
-        "Nick Cassidy",
-        "Edoardo Mortara",
-        "Nico Müller",
-        "Pascal Wehrlein",
+        "Jake Dennis", "Stoffel Vandoorne", "Sergio Camara", "Robin Frijns", 
+        "Jake Hughes", "Maximilian Gunther", "Sam Bird", "Mitch Evans", 
+        "Lucas di Grassi", "Antonio Felix da Costa", "Sébastien Buemi", 
+        "Norman Nato", "Jehan Daruvala", "Nyck de Vries", "Oliver Rowland", 
+        "Sacha Fenestraz", "Jean-Eric Vergne", "Dan Ticktum", "Nick Cassidy", 
+        "Edoardo Mortara", "Nico Müller", "Pascal Wehrlein"
     ]
     
     # Gera dados de desempenho para cada corredor (17 corridas, pontuações entre 0 e 100)
@@ -35,43 +18,40 @@ def generate_racers_data() -> dict:
 
     return racers_data
 
-
 def rank_racers(data) -> list:
+    # Cria uma cópia dos dados para preservar o original
+    data_copy = data.copy()
     # Tamanho do dicionário de dados dos corredores
-    size = len(data)
+    size = len(data_copy)
     # Lista para armazenar a ordem recomendada dos corredores
-    recomendation_order = []
+    recommendation_order = []
 
-    while len(recomendation_order) < size:
+    while len(recommendation_order) < size:
         best_racer_name = None
         # Loop para encontrar o corredor com a melhor média de desempenho
-        for i in data:
+        for i in data_copy:
             if not best_racer_name:
                 best_racer_name = i
 
-            desempenho = data[i]
+            desempenho = data_copy[i]
 
             average_current = sum(desempenho) / len(desempenho)
-            average_best_racer_name = sum(data[best_racer_name]) / len(
-                data[best_racer_name]
-            )
+            average_best_racer_name = sum(data_copy[best_racer_name]) / len(data_copy[best_racer_name])
 
             if average_current > average_best_racer_name:
                 best_racer_name = i
 
         # Adiciona o corredor com a melhor média à lista de recomendação e remove dos dados
-        recomendation_order.append(
-            {best_racer_name: sum(data[best_racer_name]) / len(data[best_racer_name])}
+        recommendation_order.append(
+            {best_racer_name: sum(data_copy[best_racer_name]) / len(data_copy[best_racer_name])}
         )
-        data.pop(best_racer_name)
+        data_copy.pop(best_racer_name)
 
-    return recomendation_order
-
+    return recommendation_order
 
 def generate_ranked_racers_names(racers_data) -> list:
     # Extrai os nomes dos corredores ordenados por rank
     return [list(racer_name.keys())[0] for racer_name in racers_data]
-
 
 def show_racers_template(msg, function, parameters) -> None:
     # Template para exibir informações dos corredores
@@ -80,19 +60,16 @@ def show_racers_template(msg, function, parameters) -> None:
     function(parameters)
     print("*" * 20)
 
-
 def show_racer_all(racers_data) -> None:
     # Exibe o nome de todos os corredores
     for racer in racers_data:
         print(f"- {racer}")
-
 
 def show_racers_all_points(racers_data) -> None:
     # Exibe o nome dos corredores e suas pontuações em cada corrida
     for racer in racers_data:
         notas = "pts |".join(map(str, racers_data[racer]))
         print(f"{racer} -> {notas}pts")
-
 
 def show_racers_ranking(racers_data) -> None:
     # Exibe o ranking dos corredores
@@ -102,7 +79,6 @@ def show_racers_ranking(racers_data) -> None:
         racer_name = list(racers_ranked[rank].keys())[0]
         print(f"{rank+1}° - {racer_name}: {racers_ranked[rank][racer_name]:.2f}pts")
 
-
 def force_question(msg, lista, error_msg="Valor não encontrado") -> str:
     # Força o usuário a responder com um valor específico
     var = input(msg)
@@ -110,11 +86,10 @@ def force_question(msg, lista, error_msg="Valor não encontrado") -> str:
         if type(error_msg) == str:
             print(error_msg)
         else:
-            error_msg()
+            error_msg(lista)
 
         var = input(msg)
     return var
-
 
 def verify_variable(lista, var) -> bool:
     # Verifica se a variável está na lista (case insensitive)
@@ -123,21 +98,17 @@ def verify_variable(lista, var) -> bool:
             return True
     return False
 
-
 def search_variable(lista, var) -> int:
     # Retorna o índice da variável na lista
     for i in range(len(lista)):
         if lista[i] == var:
             return i
 
-
 def search_racer(racers_data) -> None:
     # Busca e exibe informações de um corredor específico
     racers_ranked = rank_racers(racers_data)
     racers_names = generate_ranked_racers_names(racers_ranked)
-    racer_name = force_question(
-        "\nNome do corredor: ", racers_names, search_racer_error_message
-    )
+    racer_name = force_question("\nNome do corredor: ", racers_names, search_racer_error_message)
 
     for racer in racers_names:
         if racer_name == racer.lower():
@@ -145,13 +116,11 @@ def search_racer(racers_data) -> None:
             print("\nRank | Nome | Média de Desempenho")
             print(f"{rank+1}° | {racer} | {racers_ranked[rank][racer]:.2f}pts")
 
-
 def search_racer_error_message(racers_data) -> None:
     # Mensagem de erro caso o nome do corredor não seja encontrado
     print("\nCorredor não encontrado!")
     print("Confira a lista de corredores:")
     show_racer_all(racers_data)
-
 
 def close_session() -> bool:
     # Confirmação para encerrar o programa
@@ -161,7 +130,6 @@ def close_session() -> bool:
         return False
     return True
 
-
 def menu() -> None:
     # Exibe o menu de seleção de ações
     print("\nSelecione um de nossos serviços!!!")
@@ -170,7 +138,6 @@ def menu() -> None:
     print("3- Resultados de desempenho nas corridas")
     print("4- Buscar corredor")
     print("5- Sair\n")
-
 
 def executa_servico(escolha, racers_data) -> bool:
     # Executa o serviço selecionado pelo usuário
@@ -188,7 +155,6 @@ def executa_servico(escolha, racers_data) -> bool:
             
     return True
 
-
 def main(continua_execuacao=True) -> None:
     # Função principal que inicializa variáveis e contém o loop de execução
     racers_data = generate_racers_data()
@@ -201,7 +167,6 @@ def main(continua_execuacao=True) -> None:
 
     print("Obrigado pela preferência!!!!")
     print("Volte Sempre <3")
-
 
 # Executa a função principal
 main()
