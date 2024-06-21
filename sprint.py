@@ -55,7 +55,7 @@ def generate_ranked_racers_names(racers_data) -> list:
 
 def show_racers_template(msg, function, parameters) -> None:
     # Template para exibir informações dos corredores
-    print("*" * 20)
+    print("\n"+("*" * 20))
     print(f"Corredores: {msg}")
     function(parameters)
     print("*" * 20)
@@ -89,7 +89,7 @@ def force_question(msg, lista, error_msg="Valor não encontrado") -> str:
             error_msg(lista)
 
         var = input(msg)
-    return var
+    return var.lower()
 
 def verify_variable(lista, var) -> bool:
     # Verifica se a variável está na lista (case insensitive)
@@ -101,20 +101,24 @@ def verify_variable(lista, var) -> bool:
 def search_variable(lista, var) -> int:
     # Retorna o índice da variável na lista
     for i in range(len(lista)):
-        if lista[i] == var:
+        if lista[i].lower() == var.lower():
             return i
 
 def search_racer(racers_data) -> None:
     # Busca e exibe informações de um corredor específico
     racers_ranked = rank_racers(racers_data)
     racers_names = generate_ranked_racers_names(racers_ranked)
-    racer_name = force_question("\nNome do corredor: ", racers_names, search_racer_error_message)
+    print("\n"+("*" * 20))
+    racer_name = force_question("Nome do corredor: ", racers_names, search_racer_error_message)
+    print(("*" * 20)+"\n")
 
     for racer in racers_names:
         if racer_name == racer.lower():
             rank = search_variable(racers_names, racer)
-            print("\nRank | Nome | Média de Desempenho")
+            print("*" * 20)
+            print("Rank | Nome | Média de Desempenho")
             print(f"{rank+1}° | {racer} | {racers_ranked[rank][racer]:.2f}pts")
+            print(("*" * 20)+"\n")
 
 def search_racer_error_message(racers_data) -> None:
     # Mensagem de erro caso o nome do corredor não seja encontrado
@@ -125,7 +129,7 @@ def search_racer_error_message(racers_data) -> None:
 def close_session() -> bool:
     # Confirmação para encerrar o programa
     confirmation_text = "Você tem certeza que deseja sair?(Sim - Nao): "
-    confirmation = force_question(confirmation_text, ["Sim", "Nao"])
+    confirmation = force_question(confirmation_text, ["sim", "nao"])
     if confirmation == "sim":
         return False
     return True
